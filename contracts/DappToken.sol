@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.2;
 
 contract DappToken {
@@ -17,7 +18,7 @@ contract DappToken {
 
     mapping(address => uint256) public balanceOf; //mapping is a new structure in contract holds key value store, key is address here and value is balanceOf with reference to ERC 20 standard instead of calling direct balanceOf we can use public variable (i.e mapping in this case) to access the balanceOf
 
-    constructor(uint256 _initialSupply) public {
+    constructor(uint256 _initialSupply) {
         //public is visibility of the method/constructor
         balanceOf[msg.sender] = _initialSupply; //getting data from ganache addresses as of now in local, msg is a global variable in solidity that had several value we can get from it, in this case we're trying to get the balance using sender
         //more details on global variables in https://docs.soliditylang.org/en/v0.4.21/units-and-global-variables.html
