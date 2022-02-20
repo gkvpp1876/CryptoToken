@@ -1,4 +1,5 @@
-const Migrations = artifacts.require("Migrations");
+//2_deploy_contracts.js filename starting with 2 is given to follow the execution of the order
+const Migrations = artifacts.require("DappToken"); //takes the file contracts/DappToken.sol
 
 module.exports = function (deployer) {
   deployer.deploy(Migrations);
