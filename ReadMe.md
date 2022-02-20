@@ -9,3 +9,6 @@
 9. totalSupply.toNumber() --> to get the exact number
 10. Whenever we do transation that is migration (running smart contracts) costs that is called GAS fee, its free if we're just reading the data
 11. touch test/DappToken.js --> creating the testing scenario for the changes we've done as block chain is immutable we need to test aggressively, truffle used mocha chai for unit testing
+
+_ is used for the local variable
+12. truffle console -> web3.eth.getAccounts() --> web3 is a library which allows us to interact with our smart contracts and block chain

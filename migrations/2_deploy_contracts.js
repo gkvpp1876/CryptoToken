@@ -2,7 +2,7 @@
 const Migrations = artifacts.require("DappToken"); //takes the file contracts/DappToken.sol
 
 module.exports = function (deployer) {
-  deployer.deploy(Migrations);
+  deployer.deploy(Migrations, 1000000);
 };
 
 //Similar to the data migration we do on SQL we run some CRUD operation scripts for migration as we need to changes the data from one form to another
