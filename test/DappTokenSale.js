@@ -33,19 +33,16 @@ contract('DappTokenSale', function (accounts) {
         }).then(function (receipt) {
             assert.equal(receipt.logs.length, 1, 'triggers one event');
             assert.equal(receipt.logs[0].event, 'Sell', 'should be the "Sell" event');
-            assert.equal(receipt.logs[0]._args._buyer, buyer, 'logs the account that purchased the tokens');
-            assert.equal(receipt.logs[0]._args._amount, numberOfTokens, 'logs the number of tokens purchased');
+            assert.equal(receipt.logs[0].args._buyer, buyer, 'logs the account that purchased the tokens');
+            assert.equal(receipt.logs[0].args._amount, numberOfTokens, 'logs the number of tokens purchased');
             //getting the tokens sold
             return tokenSaleInstance.tokensSold();
         }).then(function (amount) {
             assert.equal(amount.toNumber(), numberOfTokens, 'increments the number of tokens sold');
             //Try to buy the tokens different from the ether value
-            console.log("buyer data ",buyer);
             return tokenSaleInstance.buyTokens(numberOfTokens, { from: buyer, value: 1 });
         }).then(assert.fail).catch(function (error) {
-            // console.log(numberOfTokens * tokenPrice, error.message)
-            // assert(error.message.indexOf('revert') >= 0, 'msg.value must equal number of tokens in wei');
-
+            assert(error.message.indexOf('revert') >= 0, 'msg.value must equal number of tokens in wei');
         });
     });
 });
