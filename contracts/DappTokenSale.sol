@@ -29,7 +29,7 @@ contract DappTokenSale {
     function buyTokens(uint256 _numberOfTokens) public payable {
         //Require that value is equal to tokens, restricting the transaction not to allow lower than the numberOfTokens and the price of the ether(i.e interms of wei)
         require(msg.value == multiply(_numberOfTokens, tokenPrice));
-        //Require that the contract has enough tokens, Checking the balance of the contract before buyer execution as the tokens for sale are associated with the contract 
+        //Require that the contract has enough tokens, Checking the balance of the contract before buyer execution as the tokens for sale are associated with the contract
         require(tokenContract.balanceOf(address(this)) >= _numberOfTokens); //this points to the current smart contract
         //Require that a transfer is successful, Now initiating the transfer of tokens and validating
         require(tokenContract.transfer(msg.sender, _numberOfTokens));
@@ -37,5 +37,23 @@ contract DappTokenSale {
         tokensSold += _numberOfTokens;
         //Trigger sell Event
         emit Sell(msg.sender, _numberOfTokens);
+    }
+
+    //Ending Token DappTokenSale
+    function endSale() public {
+        //Require only admin to do end the sale
+        require(msg.sender == admin);
+        //Transfer the remaining amount tokens of sale back to Admin
+        require(
+            tokenContract.transfer(
+                admin,
+                tokenContract.balanceOf(address(this))
+            )
+        );
+
+        //Update: from the git repo: Let's not destroy the contract here
+        //Destroy the Contract
+        // selfdestruct(payable(admin));
+        payable(admin).transfer(address(this).balance);
     }
 }

@@ -49,7 +49,7 @@ contract('DappTokenSale', function (accounts) {
         }).then(function (amount) {
             assert.equal(amount.toNumber(), numberOfTokens, 'increments the number of tokens sold');
             return tokenInstance.balanceOf(buyer);
-        }).then(function(amount){
+        }).then(function (amount) {
             assert.equal(amount.toNumber(), numberOfTokens, 'balance of the buyer should have number of tokens ordered');
             return tokenInstance.balanceOf(tokenSaleInstance.address); //tokeSaleInstance address is contract address
         }).then(function (balance) {
@@ -66,5 +66,32 @@ contract('DappTokenSale', function (accounts) {
         });
     });
 
-
+    it('ends token sale', function () {
+        return DappToken.deployed().then(function (instance) {
+            //Grab the DappToken instance first
+            tokenInstance = instance;
+            return DappTokenSale.deployed(); //deploying DappTokenSale
+        }).then(function (instance) {
+            //Grab the DappTokenSale instance second
+            tokenSaleInstance = instance;
+            //Try to end sale from account other than the admin
+            return tokenSaleInstance.endSale({ from: buyer });
+        }).then(assert.fail).catch(function (error) {
+            assert(error.message.indexOf('revert' >= 0, 'must be admin to end sale'));
+            //End sale as admin
+            return tokenSaleInstance.endSale({ from: admin });
+        }).then(function (receipt) {
+            return tokenInstance.balanceOf(admin);
+        }).then(function (balance) {
+            assert.equal(balance.toNumber(), 999990, 'return all unsold dapp tokens to admin');
+            //Update from repo: check that the cotract has no balance
+            return web3.eth.getBalance(tokenSaleInstance.address);
+            //Check that token price was reset when selfDestruct was called
+            // return tokenSaleInstance.tokenPrice();
+        }).then(function (balance) {
+            assert.equal(balance, 0);
+            // }).then(function(price){
+            // assert.equal(price.toNumber(), 0, 'token price was reset');
+        });
+    });
 });
